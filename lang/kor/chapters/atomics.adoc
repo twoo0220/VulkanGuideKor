@@ -40,7 +40,7 @@ Vulkan 1.0에서 확장 기능이 없는 경우, 애플리케이션이 아토믹
 
 === 아토믹 카운터(Atomic Counters)
 
-GLSL과 SPIR-V 모두 아토믹 카운터 사용을 지원하지만, Vulkan은 `AtomicCounter` 스토리지 클래스를 사용하는 데 필요한 `AtomicStorage` SPIR-V 기능을 **공개하지 않습니다**. 앱에서 `OpAtomiclAdd` 및 `OpAtomiclSub`를 `1`로 사용하는 것으로 동일한 결과를 얻을 수 있습니다.
+GLSL과 SPIR-V 모두 아토믹 카운터 사용을 지원하지만, Vulkan은 `AtomicCounter` 스토리지 클래스를 사용하는 데 필요한 `AtomicStorage` SPIR-V 기능을 **공개하지 않습니다**. 앱에서 `OpAtomiclAdd` 및 `OpAtomiclSub` 를 `1` 로 사용하는 것으로 동일한 결과를 얻을 수 있습니다.
 
 === 확장 기능의 아토믹 지원(Expanding Atomic Support)
 
@@ -63,14 +63,14 @@ Vulkan 1.2에서 코어로 승격되었습니다.
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_atomic_int64.txt[GLSL - GL_EXT_shader_atomic_int64]
 ====
 
-이 확장 기능을 통해 **버퍼(buffers)**와 **공유 메모리(shared memory)**에 대한 '64비트 int' 아토믹 연산을 허용합니다. `Int64Atomics` SPIR-V 기능을 선언하면, 지원되는 모든 SPIR-V 연산을 '64비트 int'와 함께 사용할 수 있습니다.
+이 확장 기능을 통해 **버퍼(buffers)**와 **공유 메모리(shared memory)**에 대한 `64비트 int` 아토믹 연산을 허용합니다. `Int64Atomics` SPIR-V 기능을 선언하면, 지원되는 모든 SPIR-V 연산을 `64비트 int` 와 함께 사용할 수 있습니다.
 
-두 개의 기능 비트인 `shaderBufferInt64Atomics`와 `shaderSharedInt64Atomics`는 '64비트 int' 아토믹에 어떤 스토리지 클래스가 지원되는지 쿼리하는 데 사용됩니다.
+두 개의 기능 비트인 `shaderBufferInt64Atomics` 와 `shaderSharedInt64Atomics` 는 `64비트 int` 아토믹에 어떤 스토리지 클래스가 지원되는지 쿼리하는 데 사용됩니다.
 
   * `shaderBufferInt64Atomics` - buffers
   * `shaderSharedInt64Atomics` - shared memory
 
-`shaderBufferInt64Atomics`는 Vulkan 1.2 이상을 사용하거나 확장 기능이 공개되어 있는 경우에는 항상 지원되도록 보장됩니다.
+`shaderBufferInt64Atomics` 는 Vulkan 1.2 이상을 사용하거나 확장 기능이 공개되어 있는 경우에는 항상 지원되도록 보장됩니다.
 
 [[VK_EXT_shader_image_atomic_int64]]
 == VK_EXT_shader_image_atomic_int64
@@ -82,7 +82,7 @@ link:https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Regist
 link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt[GLSL_EXT_shader_image_int64]
 ====
 
-이 확장 기능은 **이미지(images)**와 **희소 이미지(sparse images)**에 대한 '64비트 int' 아토믹 연산을 허용합니다. `Int64Atomics` 및 `Int64ImageEXT` SPIR-V 기능을 선언하면 지원되는 모든 SPIR-V 연산을 이미지에서 `64-bit int`와 함께 사용할 수 있습니다.
+이 확장 기능은 **이미지(images)**와 **희소 이미지(sparse images)**에 대한 `64비트 int` 아토믹 연산을 허용합니다. `Int64Atomics` 및 `Int64ImageEXT` SPIR-V 기능을 선언하면 지원되는 모든 SPIR-V 연산을 이미지에서 `64-bit int` 와 함께 사용할 수 있습니다.
 
 === 이미지(Image) vs 희소 이미지(Sparse Image) 지원
 
@@ -100,11 +100,11 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_sh
 
 이 확장을 사용하면 **버퍼(buffers)**, **공유 메모리(shared memory)**, **이미지(images)** 및 **희소 이미지(sparse images)**에 대한 `float` 아토믹 연산을 사용할 수 있습니다. 이 확장 기능에서는 `float` 유형에 대해 일부 연산만 지원됩니다.
 
-이 확장에는 많은 기능 비트가 나열되어 있습니다. 이들을 그룹화하는 한 가지 방법은 `*Float*Atomics` 와 `*Float*AtomicAdd`를 사용하는 것입니다:
+이 확장에는 많은 기능 비트가 나열되어 있습니다. 이들을 그룹화하는 한 가지 방법은 `*Float*Atomics` 와 `*Float*AtomicAdd` 를 사용하는 것입니다:
 
-  * `*Float*Atomics` 기능을 사용하면 `float` 형에 대해서 `OpAtomicStore`, `OpAtomicLoad`, `OpAtomicExchange`를 사용할 수 있습니다.
+  * `*Float*Atomics` 기능을 사용하면 `float` 형에 대해서 `OpAtomicStore` , `OpAtomicLoad`, `OpAtomicExchange` 를 사용할 수 있습니다.
   ** SPIR-V 사양에서는 `int` 유형만 허용하므로 `OpAtomicCompareExchange` "`exchange`" 연산은 포함되지 않습니다.
-  * `*Float*AtomicAdd` 기능을 사용하면 두 가지 확장 SPIR-V 연산인 `AtomicFloat32AddEXT` 와 `AtomicFloat64AddEXT`를 사용할 수 있습니다.
+  * `*Float*AtomicAdd` 기능을 사용하면 두 가지 확장 SPIR-V 연산인 `AtomicFloat32AddEXT` 와 `AtomicFloat64AddEXT` 를 사용할 수 있습니다.
 
 여기서부터 나머지 기능의 조합은 `32-bit float` 지원 그룹으로 분류됩니다:
 
@@ -113,14 +113,14 @@ link:https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_sh
   * `shaderImageFloat32*` - images
   * `sparseImageFloat32*` - sparse images
 
-`64-bit float`지원은 다음과 같습니다:
+`64-bit float` 지원은 다음과 같습니다:
 
   * `shaderBufferFloat64*` - buffers
   * `shaderSharedFloat64*` - shared memory
 
 [NOTE]
 ====
-OpenGLES link:https://registry.khronos.org/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] 은  `r32f`에서 `imageAtomicExchange`에 대한 아토믹 사용을 허용합니다. 포팅을 위해, 애플리케이션은 `shaderImageFloat32Atomics` 지원을 확인하여 Vulkan에서 동일한 작업을 수행할 수 있는지 확인해야 합니다.
+OpenGLES link:https://registry.khronos.org/OpenGL/extensions/OES/OES_shader_image_atomic.txt[OES_shader_image_atomic] 은  `r32f` 에서 `imageAtomicExchange` 에 대한 아토믹 사용을 허용합니다. 포팅을 위해, 애플리케이션은 `shaderImageFloat32Atomics` 지원을 확인하여 Vulkan에서 동일한 작업을 수행할 수 있는지 확인해야 합니다.
 ====
 
 [[VK_EXT_shader_atomic_float2]]
