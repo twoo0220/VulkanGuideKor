@@ -21,23 +21,23 @@ xref:{chapters}vulkan_spec.adoc[Vulkan Spec] 의 다양한 부분에서 `depth` 
   **  <<layout, 레이아웃(Layout)>>
   **  <<clearing, 정리(Clearing)>>
   *  <<pre-rasterization, 래스터화 전(Pre-rasterization)>>
-  **  <<primitive-clipping, Primitive Clipping>>
-  ***  <<user-defined-clipping-and-culling, User defined clipping and culling>>
-  ***  <<porting-from-opengl, Porting from OpenGL>>
-  **  <<viewport-transformation, Viewport Transformation>>
-  ***  <<depth-range, Depth Range>>
-  *  <<rasterization, Rasterization>>
-  **  <<depth-bias, Depth Bias>>
-  *  <<post-rasterization, Post-rasterization>>
-  **  <<fragment-shader, Fragment Shader>>
-  ***  <<conservative-depth, Conservative depth>>
-  **  <<per-sample-processing-and-coverage-mask, Per-sample processing and coverage mask>>
-  ***  <<resolving-depth-buffer, Resolving depth buffer>>
-  **  <<depth-bounds, Depth Bounds>>
-  **  <<depth-test, Depth Test>>
-  ***  <<depth-compare-operation, Depth Compare Operation>>
-  ***  <<depth-buffer-writes, Depth Buffer Writes>>
-  ***  <<depth-clamping, Depth Clamping>>
+  **  <<primitive-clipping, 프리미티브 클리핑(Primitive Clipping)>>
+  ***  <<user-defined-clipping-and-culling, 사용자 정의 클리핑 및 컬링>>
+  ***  <<porting-from-opengl, OpenGL로부터 포팅>>
+  **  <<viewport-transformation, 뷰포트 변환(Viewport Transformation)>>
+  ***  <<depth-range, 깊이 범위(Depth Range)>>
+  *  <<rasterization, 래스터화(Rasterization)>>
+  **  <<depth-bias, 깊이 바이어스(Depth Bias)>>
+  *  <<post-rasterization, 래스터화 후(Post-rasterization)>>
+  **  <<fragment-shader, 프래그먼트 쉐이더(Fragment Shader)>>
+  ***  <<conservative-depth, 보수적인 깊이(Conservative depth)>>
+  **  <<per-sample-processing-and-coverage-mask, 샘플별 처리 및 커버리지 마스크(Per-sample processing and coverage mask)>>
+  ***  <<resolving-depth-buffer, 깊이 버퍼 처리(Resolving depth buffer)>>
+  **  <<depth-bounds, 깊이 제한(Depth Bounds)>>
+  **  <<depth-test, 깊이 테스트(Depth Test)>>
+  ***  <<depth-compare-operation, 깊이 비교 연산(Depth Compare Operation)>>
+  ***  <<depth-buffer-writes, 깊이 버퍼 쓰기(Depth Buffer Writes)>>
+  ***  <<depth-clamping, 깊이 클램핑(Depth Clamping)>>
 
 [[graphics-pipeline]]
 == 그래픽스 파이프라인(Graphics Pipeline)
