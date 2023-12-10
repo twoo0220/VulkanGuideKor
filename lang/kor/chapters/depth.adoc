@@ -42,22 +42,22 @@ xref:{chapters}vulkan_spec.adoc[Vulkan Spec] 의 다양한 부분에서 `depth` 
 [[graphics-pipeline]]
 == 그래픽스 파이프라인(Graphics Pipeline)
 
-The concept of "depth" is only used for xref:{chapters}what_vulkan_can_do.adoc[graphics pipelines] in Vulkan and doesn't take effect until a draw call is submitted.
+"깊이(depth)" 개념은 xref:{chapters}what_vulkan_can_do.adoc[graphics pipelines] 에만 사용되며 드로우콜이 제출될 때까지 적용되지 않습니다.
 
-Inside the `VkGraphicsPipelineCreateInfo` there are many different values related to `depth` that can be controlled. Some states are even xref:{chapters}dynamic_state.adoc[dynamic] as well.
+`VkGraphicsPipelineCreateInfo` 내부에는 `depth` 와 관련된 다양한 제어 가능한 값들이 있습니다. 일부 상태는 xref:{chapters}dynamic_state.adoc[dynamic] 이기도 합니다.
 
 [[depth-formats]]
-== Depth Formats
+== 깊이 포맷(Depth Formats)
 
-There are a few different depth formats and an implementation may expose support for in Vulkan.
+몇 가지 깊이 형식이 있으며, 구현에 따라 Vulkan에서 지원되는 형식이 노출될 수 있습니다.
 
-For **reading** from a depth image only `VK_FORMAT_D16_UNORM` and `VK_FORMAT_D32_SFLOAT` are required to support being read via sampling or blit operations.
+깊이 이미지에서 **읽기(reading)**에 필요한 포맷은 샘플링이나 블릿 연산을 통한 읽기를 지원하기 위한 `VK_FORMAT_D16_UNORM` 과 `VK_FORMAT_D32_SFLOAT` 뿐입니다.
 
-For **writing** to a depth image `VK_FORMAT_D16_UNORM` is required to be supported. From here at least one of (`VK_FORMAT_X8_D24_UNORM_PACK32` **or** `VK_FORMAT_D32_SFLOAT`) **and** (`VK_FORMAT_D24_UNORM_S8_UINT` **or** `VK_FORMAT_D32_SFLOAT_S8_UINT`) must also be supported. This will involve some extra logic when trying to find which format to use if **both** the depth and stencil are needed in the same format.
+깊이 이미지에서 **쓰기(writing)**를 하려면 `VK_FORMAT_D16_UNORM` 이 지원되어야 합니다. 여기에서 (`VK_FORMAT_X8_D24_UNORM_PACK32` **또는** `VK_FORMAT_D32_SFLOAT`) ** 및 ** (`VK_FORMAT_D24_UNORM_S8_UINT` **또는** `VK_FORMAT_D32_SFLOAT_S8_UINT`) 중 적어도 하나를 지원해야 합니다. 따라서 깊이와 스텐실이 **모두** 같은 포맷으로 필요한 경우 사용할 포맷을 착이 위해 여분의 로직이 필요합니다.
 
 [source,cpp]
 ----
-// Example of query logic
+// 쿼리 로직 예시
 VkFormatProperties properties;
 
 vkGetPhysicalDeviceFormatProperties(physicalDevice, VK_FORMAT_D24_UNORM_S8_UINT, &properties);
@@ -66,34 +66,34 @@ bool d24s8_support = (properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH
 vkGetPhysicalDeviceFormatProperties(physicalDevice, VK_FORMAT_D32_SFLOAT_S8_UINT, &properties);
 bool d32s8_support = (properties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 
-assert(d24s8_support | d32s8_support); // will always support at least one
+assert(d24s8_support | d32s8_support); // 적어도 하나를 항상 지원
 ----
 
 [[depth-buffer-as-a-vkimage]]
-== Depth Buffer as a VkImage
+== 깊이 버퍼를 VkImage로 사용
 
-The term "depth buffer" is used a lot when talking about graphics, but in Vulkan, it is just a `VkImage`/`VkImageView` that a `VkFramebuffer` can reference at draw time. When creating a `VkRenderPass` the `pDepthStencilAttachment` value points to the depth attachment in the framebuffer.
+"깊이 버퍼" 라는 용어는 그래픽스에 대해 이야기할 때 많이 사용되지만, Vulkan에서는 `VkFramebuffer` 가 그리기 시점에 참조할 수 있는 `VkImage`/`VkImageView` 에 불과합니다. `VkRenderPass` 를 생성할 때 `pDepthStencilAttachment` 값은 프레임버퍼의 깊이 첨부(attachment)를 가리킵니다.(attachment : (주로 이미지) 버퍼 데이터를 원하는 용도로 장치가 사용할 수 있게 제공)
 
-In order to use `pDepthStencilAttachment` the backing `VkImage` must have been created with `VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT`.
+`pDepthStencilAttachment` 를 사용하려면 `VkImage` 는 `VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT` 로 작성되어 있어야 합니다.
 
-When performing operations such as image barriers or clearing where the `VkImageAspectFlags` is required, the `VK_IMAGE_ASPECT_DEPTH_BIT` is used to reference the depth memory.
+이미지 배리어나 정리(Clearing) 등 `VkImageAspectFlags` 가 필요한 작업을 수행할 때, `VK_IMAGE_ASPECT_DEPTH_BIT` 는 깊이 메모리를 참조하는 데 사용됩니다.
 
 [[layout]]
-=== Layout
+=== 레이아웃(Layout)
 
-When selecting the `VkImageLayout` there are some layouts that allow for **both** reading and writing to the image:
+`VkImageLayout` 를 선택할 때 이미지에 대한 읽기 및 쓰기를 **모두** 허용하는 레이아웃이 있습니다:
 
   * VK_IMAGE_LAYOUT_**DEPTH**\_STENCIL_**ATTACHMENT**_OPTIMAL
   * VK_IMAGE_LAYOUT_**DEPTH_ATTACHMENT**_STENCIL_READ_ONLY_OPTIMAL
   * VK_IMAGE_LAYOUT_**DEPTH_ATTACHMENT**_OPTIMAL
 
-as well as layouts that allow for **only** reading to the image:
+뿐만 아니라 이미지를 읽을 수 **만** 있는 레이아웃도 지원합니다:
 
   * VK_IMAGE_LAYOUT_**DEPTH**\_STENCIL_**READ_ONLY**_OPTIMAL
   * VK_IMAGE_LAYOUT_**DEPTH_READ_ONLY**_STENCIL_ATTACHMENT_OPTIMAL
   * VK_IMAGE_LAYOUT_**DEPTH_READ_ONLY**_OPTIMAL
 
-When doing the layout transition make sure to set the proper depth access masks needed for both reading and writing the depth image.
+레이아웃 전환을 수행할 때 깊이 이미지 읽기 및 쓰기에 필요한 적절한 깊이 액세스 마스크를 설정해야 합니다.
 
 [source,cpp]
 ----
