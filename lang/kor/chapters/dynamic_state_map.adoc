@@ -4,9 +4,9 @@
 ifndef::chapters[:chapters:]
 
 [[dynamic-state-map]]
-= Dynamic State Map
+= 동적 스테이트 지도(Dynamic State Map)
 
-This map is for helping to quickly find which dynamic state goes with other components
+이 배치표는 어떤 동적 스테이트가 다른 요소와 궁합이 좋은지 빠르게 찾기 위한 것입니다.
 
 [%autowidth.stretch]
 |====
