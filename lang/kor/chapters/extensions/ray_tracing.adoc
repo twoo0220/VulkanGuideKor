@@ -122,56 +122,34 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
 [[VK_KHR_deferred_host_operations]]
 == VK_KHR_deferred_host_operations
 
-`VK_KHR_deferred_host_operations` introduces a mechanism for distributing expensive
-CPU tasks across multiple threads. Rather than introduce a thread pool into Vulkan
-drivers, `VK_KHR_deferred_host_operations` is designed to allow an application to
-create and manage the threads.
+`VK_KHR_deferred_host_operations` 는 고비용 CPU 작업을 여러 스레드에 분산하는 메커니즘을 도입합니다. Vulkan 드라이버에 스레드 풀을 도입하는 대신, `VK_KHR_deferred_host_operations` 는 애플리케이션이 스레드를 생성하고 관리할 수 있도록 설계되었습니다.
 
-As with `VK_KHR_pipeline_library`, `VK_KHR_deferred_host_operations` was defined
-as a separate extension to allow for the possibility of using the same functionality
-in other extensions in the future without introducing a dependency on the ray
-tracing extensions.
+`VK_KHR_pipeline_library` 와 마찬가지로 `VK_KHR_deferred_host_operations` 는 레이 트레이싱 확장 기능에 대한 종속성을 도입하지 않고 향후 다른 확장 기능에서 동일한 기능을 사용할 수 있도록 별도의 확장 기능으로 정의했습니다.
 
-Only operations that are specifically noted as supporting deferral may be deferred.
-Currently the only operations which support deferral are `vkCreateRayTracingPipelinesKHR`,
-`vkBuildAccelerationStructuresKHR`, `vkCopyAccelerationStructureKHR`,
-`vkCopyMemoryToAccelerationStructureKHR`, and `vkCopyAccelerationStructureToMemoryKHR`
+지연(deferral)을 지원한다고 구체적으로 명시된 작업만 지연될 수 있습니다.
+현재 디퍼런스를 지원하는 작업은 `vkCreateRayTracingPipelinesKHR`, `vkBuildAccelerationStructuresKHR`, `vkCopyAccelerationStructureKHR`, `vkCopyMemoryToAccelerationStructureKHR`, `vkCopyAccelerationStructureToMemoryKHR` 뿐입니다.
 
-To request that an operation is deferred:
+작업 지연을 요청하려면:
 
-  * Create a `VkDeferredOperationKHR` object by calling `vkCreateDeferredOperationKHR`
-  * Call the operation that you wish to be deferred, passing the `VkDeferredOperationKHR`
-    as a parameter.
-  * Check the `VkResult` returned by the above operation:
-  ** `VK_OPERATION_DEFERRED_KHR` indicates that the operation was successfully
-     deferred
-  ** `VK_OPERATION_NOT_DEFERRED_KHR` indicates that the operation successfully
-     completed immediately
-  ** Any error value indicates that an error occurred
+  * `vkCreateDeferredOperationKHR` 호출하여 `VkDeferredOperationKHR` 객체를 생성합니다.
+  * 지연시키려는 작업을 호출하여 `VkDeferredOperationKHR` 을 매개변수로 전달합니다.
+  * 위 연산에서 반환된 `VkResult` 를 확인합니다:
+  ** `VK_OPERATION_DEFERRED_KHR` 은 작업이 성공적으로 지연되었음을 나타냅니다.
+  ** `VK_OPERATION_NOT_DEFERRED_KHR` 은 작업이 즉시 성공적으로 완료되었음을 나타냅니다
+  ** 오류가 발생한다면 오류값(error value)을 반환합니다.
 
-To join a thread to a deferred operation, and contribute CPU time to progressing
-the operation:
+스레드를 지연된 작업에 결합하고 작업 진행에 CPU 시간을 주려면:
 
-  * Call `vkDeferredOperationJoinKHR` from each thread that you wish to participate
-    in the operation
-  * Check the `VkResult` returned by `vkDeferredOperationJoinKHR`:
-  ** `VK_SUCCESS` indicates that the operation is complete
-  ** `VK_THREAD_DONE_KHR` indicates that there is no more work to assign to the
-     calling thread, but that other threads may still have some additional work to
-     complete. The current thread should not attempt to re-join by calling
-     `vkDeferredOperationJoinKHR` again
-  ** `VK_THREAD_IDLE_KHR` indicates that there is *temporarily* no work to assign
-     to the calling thread, but that additional work may become available in the
-     future. The current thread may perform some other useful work on the calling
-     thread, and re-joining by calling `vkDeferredOperationJoinKHR` again later
-     may prove beneficial
+  * 작업에 참여하려는 각 스레드에서 `vkDeferredOperationJoinKHR` 을 호출합니다.
+  * `vkDeferredOperationJoinKHR` 이 반환한 `VkResult` 를 확인합니다:
+  ** `VK_SUCCESS` 는 작업이 완료되었음을 나타냅니다.
+  ** `VK_THREAD_DONE_KHR` 은 호출한 스레드에 더 이상 할당할 작업이 없지만 다른 스레드에는 아직 완료해야 할 추가 작업이 있을 수 있음을 나타냅니다. 현재 스레드는 `vkDeferredOperationJoinKHR` 을 다시 호출하여 재참여를 시도해서는 안 됩니다.
+  ** `VK_THREAD_IDLE_KHR` 은 호출 스레드에 할당할 작업이 *일시적으로* 없지만 향후 추가 작업을 사용할 수 있게 될 수 있음을 나타냅니다. 현재 스레드가 호출한 스레드에서 다른 유용한 작업을 수행할 수 있으며, 나중에 `vkDeferredOperationJoinKHR` 을 다시 호출하여 재참여할 수도 있습니다.
 
-After an operation has completed (i.e. `vkDeferredOperationJoinKHR` has returned
-`VK_SUCCESS`), call `vkGetDeferredOperationResultKHR` to get the result of the
-operation.
+작업을 완료한 후(즉, `vkDeferredOperationJoinKHR` 이 `VK_SUCCESS` 를 반환한 경우) `vkGetDeferredOperationResultKHR` 을 호출하여 작업 결과를 가져옵니다.
 
 [[ray-tracing-synchronization]]
-== Synchronization for Ray Tracing
+== 레이 트레이싱을 위한 동기화
 
   * For trace or query calls in a shader, use
     `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` with the relevant shader
