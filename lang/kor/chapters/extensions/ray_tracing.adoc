@@ -151,100 +151,76 @@ if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersection
 [[ray-tracing-synchronization]]
 == 레이 트레이싱을 위한 동기화
 
-  * For trace or query calls in a shader, use
-    `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` with the relevant shader
-    stage(s) for the acceleration structure
-  * For accesses to the shader binding table in the ray tracing pipeline, use
-    `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` with either
-    `VK_ACCESS_SHADER_READ_BIT` or `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR`
-  * For acceleration structure builds, use
-    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` with access bits
-    corresponding to the resource being accessed:
+  * 쉐이더 트레이스 또는 쿼리 호출의 경우, 가속 구조에 해당하는 쉐이더 스테이지(들)와 함께
+    `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 을 사용하세요.
+  * 레이 트레이싱 파이프라인에서 쉐이더 바인딩 테이블에 접근하려면,
+    `VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR` 을
+    `VK_ACCESS_SHADER_READ_BIT` 또는 `VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` 과 함께 사용하세요.
+  * 가속 구조 빌드의 경우, 접근하는 리소스에 해당하는 접근 비트(access bits)와 함께
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 을 사용하세요:
 
-  ** Destination AS uses `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
-  ** Source AS (e.g. for updates) uses `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
-  ** Scratch buffers need both `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
-      and `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
-  ** Vertex/Index/Instance/Transform buffers use `VK_ACCESS_SHADER_READ_BIT`
+  ** 쓰기 대상 AS는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 을 사용합니다.
+  ** 소스 AS(예: 업데이트용)는 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 을 사용합니다.
+  ** 스크래치 버퍼에는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 와 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 모두 필요합니다.
+  ** 정점/인덱스/인스턴스/트랜스폼 버퍼는 `VK_ACCESS_SHADER_READ_BIT` 를 사용합니다.
 
-  * For acceleration structure copy commands, use
-    `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` or
-    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR`, again with access
-    flags dependent on sources:
+  * 가속 구조의 복사 명령의 경우, 
+    `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR` 또는
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 를 사용하고 소스에 맞는 접근 플래그를 사용합니다:
 
-  ** Destination AS uses `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR`
-  ** Source AS uses `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR`
-  ** Destination buffer uses `VK_ACCESS_TRANSFER_WRITE_BIT`
-  ** Source buffer uses `VK_ACCESS_TRANSFER_READ_BIT`
+  ** 쓰기 대상 AS는 `VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR` 를 사용합니다.
+  ** 소스 AS는 `VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR` 를 사용합니다.
+  ** 쓰기 대상 버퍼는 `VK_ACCESS_TRANSFER_WRITE_BIT` 를 사용합니다.
+  ** 소스 버퍼는 `VK_ACCESS_TRANSFER_READ_BIT` 를 사용합니다.
 
-  * For indirect trace calls, the indirect buffer is
-    `VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT` with
-    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT`
-  * For indirect acceleration structure builds, the indirect buffer is
-    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` with
-    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT`
-  * For micromap builds, use `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` with
-    access bits corresponding to which resource is being accessed:
+  * 간접 트레이스 호출의 경우, 간접 버퍼는
+    `VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT` 와
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` 입니다.
+  * 간접 가속 구조 빌드의 경우, 간접 버퍼는
+    `VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR` 가 포함된
+    `VK_ACCESS_INDIRECT_COMMAND_READ_BIT` 입니다.
+  * 마이크로맵 빌드의 경우, 접근 중인 리소스에 해당하는 접근 비트와 함께 `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` 를 사용합니다:
 
-  ** Destination micromap uses `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
-  ** Scratch buffers need both `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` and
-      `VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
-  ** Input buffers use `VK_ACCESS_SHADER_READ_BIT`
+  ** 쓰기 대상 마이크로맵은 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` 를 사용합니다.
+  ** 스크래치 버퍼에는 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` 와
+      `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` 가 모두 필요합니다.
+  ** 입력 버퍼는 `VK_ACCESS_SHADER_READ_BIT` 를 사용합니다.
 
-  * For micromap copy commands, use `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`,
-    again with access flags dependent on sources:
+  * 마이크로맵 복사 명령의 경우, 소스에 따라 접근 플래그가 달라지는 `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT` 를 사용합니다:
 
-  ** Destination micromap uses `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`
-  ** Source micromap uses `VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
-  ** Destination buffer uses `VK_ACCESS_TRANSFER_WRITE_BIT`
-  ** Source buffer uses `VK_ACCESS_TRANSFER_READ_BIT`
+  ** 쓰기 대상 마이크로맵은 `VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT` 를 사용합니다.
+  ** 소스 마이크로맵은 `VK_ACCESS_2_MICROMAP_READ_BIT_EXT` 를 사용합니다.
+  ** 쓰기 대상 버퍼는 `VK_ACCESS_TRANSFER_WRITE_BIT` 를 사용합니다.
+  ** 소스 버퍼는 `VK_ACCESS_TRANSFER_READ_BIT` 를 사용합니다.
 
 [NOTE]
 ====
-Unlike other copy operations, `VK_PIPELINE_STAGE_TRANSFER_BIT` does not
-work for acceleration structure copies.
+다른 복사 작업과 달리 `VK_PIPELINE_STAGE_TRANSFER_BIT` 은 가속 구조 복사에 사용할 수 없습니다.
 
-Use of `VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
-`VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` requires
-`VK_KHR_ray_tracing_maintenance1`.
+`VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR`/
+`VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR` 사용하려면
+`VK_KHR_ray_tracing_maintenance1` 가 필요합니다.
 
-Use of `VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
-`VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/`VK_ACCESS_2_MICROMAP_READ_BIT_EXT`
-requires `VK_EXT_opacity_micromap`.
+`VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT`/
+`VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT`/`VK_ACCESS_2_MICROMAP_READ_BIT_EXT` 를 사용하려면
+`VK_EXT_opacity_micromap` 가 필요합니다.
 ====
 
 [[ray-tracing-best-practices]]
-== Ray Tracing Best Practices
+== 레이 트레이싱 모범 사례들
 
-=== Minimize the Number of Concurrently Active Ray Query Objects
+=== 동시에 활성화되는 레이 쿼리 객체 수 최소화
 
-Ray query objects may be expensive in terms of thread private storage, so for
-performance, it's best to use as few as possible. In most cases it should be
-possible to use a single ray query object even if tracing multiple rays since a
-terminated ray that's issuing a new ray can use the same object. Multiple ray
-queries in the same shader should only be needed when multiple traversals need
-to be active concurrently, and shaders should be designed to minimize the number
-of active traversals.
+레이 쿼리 객체는 스레드 개인 스토리지 측면에서 비용이 많이 들 수 있으므로 성능을 위해 가능한 한 적게 사용하는 것이 가장 좋습니다. 대부분의 경우 종료된 레이를 추적하더라도 종료된 레이가 새로운 레이를 발행한다면 동일한 레이 쿼리 객체를 사용할 수 있을 것입니다. 동일한 쉐이더의 여러 레이 쿼리가 필요한 것은 여러 개의 트래버스가 동시에 활성화되어야 하는 경우이며, 쉐이더에서는 활성 트래버스의 수를 최소화하도록 설계해야 합니다.
 
-=== Minimize the Size of Ray Payloads, Hit Attributes and Callable Data
+=== 레이 페이로드(Ray Payloads), 히트 속성(Hit Attribute), 호출 가능한 데이터(Callable Data) 크기 최소화
 
-The ray tracing shader stages can communicate parameters and results using ray
-payload structures between all traversal stages, hit attribute structures
-from the traversal control shaders, and callable data structures for callable
-shaders.
+레이 트레이싱 쉐이더 스테이지는 모든 트래버스 스테이지 간의 레이 페이로드 구조체, 트래버스 제어 쉐이더의 히트 속성 구조체, 호출 가능한 쉐이더의 호출 가능한 데이터 구조체를 사용하여 파라미터와 결과를 전달할 수 있습니다.
 
-All three of these structures consume driver-managed memory, the total quantity of
-which may scale based on the size of the structures themselves, the number
-of concurrently active rays, and additional factors such as levels of recursion.
+이 세 가지 구조는 모두 드라이버가 관리하는 메모리를 사용하며, 메모리 총량은 구조체 자체의 크기, 동시 활성화된 레이의 수, 또는 재귀 레벨 등의 추가 요소에 기반하여 증가할 수 있습니다.
 
-Shaders should aim to keep the size of these structures low.
+쉐이더는 이러한 구조체의 크기를 작게 유지하는 것이 바람직합니다.
 
-=== Prefer Device-Local Memory
+=== 장치-로컬 메모리 선호하기
 
-While acceleration structures can be built on any Vulkan memory heap,
-tracing rays on accelerations structures located in device-local memory should
-be expected to deliver the best performance, and should be preferred. The use of
-host-local memory (i.e. GPU accessible system memory) may be necessary in
-situations where applications are limited by the quantity of available
-device-local memory, but this is unlikely to deliver equivalent performance to
-tracing rays on device-local memory.
+가속 구조는 모든 Vulkan 메모리 힙에 빌드할 수 있지만, 장치-로컬 메모리 상의 가속 구조에 대한 레이 트레이스가 최고의 성능을 기대할 수 있기 때문에 이를 우선시하는 것이 좋습니다. 장치-로컬 메모리 용량이 부족한 경우 호스트-로컬 메모리(즉, GPU 접근 가능 시스템 메모리)를 사용해야 하지만, 장치-코러 메모리와 동등한 성능을 기대하기는 어렵습니다.
